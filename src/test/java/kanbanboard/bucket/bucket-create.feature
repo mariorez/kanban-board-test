@@ -2,17 +2,16 @@ Feature: Bucket create endpoints
 
   Background:
     * url 'http://localhost:8080/v1/buckets'
-    * def uuid = function() { return java.util.UUID.randomUUID() + ''}
-    * def randomNumber = function(max) { return Math.floor(Math.random() * max) }
+    * def generate = Java.type('kanbanboard.TestDataGenerator')
 
   Scenario: Create a Bucket with valid data
 
     Given request
     """
     {
-      "id": '#(uuid())',
-      "position": '#(randomNumber(1000))',
-      "name": '#("Title - " + randomNumber(1000))'
+      "id": '#(generate.uuid())',
+      "position": '#(generate.faker().number().numberBetween(1, 10000))',
+      "name": '#(generate.faker().pokemon().name())'
     }
     """
     When method post
@@ -34,9 +33,11 @@ Feature: Bucket create endpoints
     Then status 400
 
     Examples:
-      | id        | position              | name
-      | null      | #(randomNumber(1000)) | #("Title - " + randomNumber(1000))
-      | #(uuid()) | 0                     | #("Title - " + randomNumber(1000))
-      | #(uuid()) | -1                    | #("Title - " + randomNumber(1000))
-      | #(uuid()) | #(randomNumber(1000)) | ''
-      | #(uuid()) | #(randomNumber(1000)) | '   '
+      | id                 | position                                             | name
+      | null               | #(generate.faker().number().numberBetween(1, 10000)) | #(generate.faker().lorem().word())
+      | ''                 | #(generate.faker().number().numberBetween(1, 10000)) | #(generate.faker().lorem().word())
+      | #(generate.uuid()) | 0                                                    | #(generate.faker().lorem().word())
+      | #(generate.uuid()) | -1                                                   | #(generate.faker().lorem().word())
+      | #(generate.uuid()) | #(generate.faker().number().numberBetween(1, 10000)) | null
+      | #(generate.uuid()) | #(generate.faker().number().numberBetween(1, 10000)) | ''
+      | #(generate.uuid()) | #(generate.faker().number().numberBetween(1, 10000)) | '   '
