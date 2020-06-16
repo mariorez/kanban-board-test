@@ -5,15 +5,23 @@ import com.github.javafaker.Faker;
 import java.util.Locale;
 import java.util.UUID;
 
-public class TestDataGenerator {
+public class DataGenerator {
     private static final String defaultLocale = "en-US";
 
     public static String uuid() {
         return UUID.randomUUID().toString();
     }
 
+    public static int randomNumber() {
+        return faker().number().numberBetween(1, 1000);
+    }
+
+    public static String randomName() {
+        return faker().pokemon().name();
+    }
+
     public static Faker faker() {
-        return TestDataGenerator.faker(TestDataGenerator.defaultLocale);
+        return DataGenerator.faker(DataGenerator.defaultLocale);
     }
 
     public static Faker faker(String locale) {
