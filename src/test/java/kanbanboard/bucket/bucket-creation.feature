@@ -9,23 +9,24 @@ Feature: Endpoint for Bucket creation
 
   Scenario: A valid payload must create a Bucket only once
 
+    * def uuid = generate.uuid()
+    * def expectedLocation = '/v1/buckets/' + uuid
     * def payload =
     """
     {
-      "id": '#(generate.uuid())',
+      "id": '#(uuid)',
       "position": '#(generate.randomNumber())',
       "name": '#(generate.randomName())'
     }
     """
-
     Given request payload
     When method post
     Then status 201
+    And match responseHeaders['Location'][0] == expectedLocation
 
-#    Given request payload
-#    When method post
-#    Then status 400
-#    And match response contains 'Invalid duplicated data'
+    Given request payload
+    When method post
+    Then status 400
 
 
   Scenario Outline: Invalid fields must return error code 400
