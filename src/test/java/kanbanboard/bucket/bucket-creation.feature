@@ -27,7 +27,7 @@ Feature: Endpoint for Bucket creation
     Given request payload
     When method post
     Then status 400
-
+    And match response contains 'Invalid duplicated data - id - position'
 
   Scenario Outline: Invalid fields must return error code 400
 
